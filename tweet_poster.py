@@ -17,10 +17,10 @@ def load_schedule(filename):
         schedule = []
         for row in reader:
             dt = datetime.datetime.strptime(row["datetime"], "%Y-%m-%d %H:%M:%S")
-            dt = jst.localize(dt)  # ← JSTとして明示的に扱う
+            if dt.tzinfo is None:
+                dt = jst.localize(dt)
             schedule.append((dt, row["text"]))
         return schedule
-
 
 def get_now_jst():
     utc_now = datetime.datetime.utcnow()
