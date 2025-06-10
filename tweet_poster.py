@@ -17,6 +17,7 @@ def load_schedule(filename):
         schedule = []
         for row in reader:
             dt = datetime.datetime.strptime(row["datetime"], "%Y-%m-%d %H:%M:%S")
+            # 🔽 ここが重要です（これがないと ValueError になります）
             if dt.tzinfo is None:
                 dt = jst.localize(dt)
             schedule.append((dt, row["text"]))
