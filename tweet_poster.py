@@ -39,11 +39,13 @@ def main():
     now = get_now_jst().replace(second=0, microsecond=0)
     schedule = load_schedule("schedule.csv")
     for dt, text in schedule:
-        dt_jst = pytz.timezone("Asia/Tokyo").localize(dt)
-        if now == dt_jst:
+        if now == dt:
             print(f"[INFO] Posting tweet: {text}")
             post_tweet(text)
             break
+    else:
+        print("No scheduled tweet for now.")
+
     else:
         print("No scheduled tweet for now.")
 
