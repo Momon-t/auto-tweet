@@ -36,15 +36,18 @@ def post_tweet(text):
     return res.status_code == 200
 
 def main():
-    now = get_now_jst().replace(second=0, microsecond=0)
+    now = get_now_jst()
+    now = now.replace(second=0, microsecond=0)
     schedule = load_schedule("schedule.csv")
     for dt, text in schedule:
-        if now == dt:
+        delta = abs((dt - now).total_seconds())
+        if delta <= 59:
             print(f"[INFO] Posting tweet: {text}")
             post_tweet(text)
             break
     else:
-        print("No scheduled tweet for now.")  # ← これも for と同じインデント
+        print("No scheduled tweet for now.")
+
 
 
 if __name__ == "__main__":
