@@ -11,13 +11,16 @@ ACCESS_TOKEN = os.environ["TWITTER_ACCESS_TOKEN"]
 ACCESS_SECRET = os.environ["TWITTER_ACCESS_SECRET"]
 
 def load_schedule(filename):
+    jst = pytz.timezone("Asia/Tokyo")
     with open(filename, encoding='utf-8') as f:
         reader = csv.DictReader(f)
         schedule = []
         for row in reader:
             dt = datetime.datetime.strptime(row["datetime"], "%Y-%m-%d %H:%M:%S")
+            dt = jst.localize(dt)  # ← JSTとして明示的に扱う
             schedule.append((dt, row["text"]))
         return schedule
+
 
 def get_now_jst():
     utc_now = datetime.datetime.utcnow()
