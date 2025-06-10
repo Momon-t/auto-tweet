@@ -38,21 +38,23 @@ def post_tweet(text):
 
 
 def main():
-    now = get_now_jst()
-    now = now.replace(second=0, microsecond=0)
-    print(f"[DEBUG] 現在のJST時刻: {now}")
-
+    now = get_now_jst().replace(second=0, microsecond=0)
     schedule = load_schedule("schedule.csv")
     for dt, text in schedule:
-        print(f"[DEBUG] スケジュール上の投稿時刻: {dt}")
-        delta = abs((dt - now).total_seconds())
+        dt_jst = dt.astimezone(pytz.timezone("Asia/Tokyo"))
+        delta = abs((now - dt_jst).total_seconds())
+
+        print(f"[DEBUG] 現在のJST時刻: {now}")
+        print(f"[DEBUG] スケジュール上の投稿時刻: {dt_jst}")
         print(f"[DEBUG] 差分（秒）: {delta}")
-        if delta <= 59:
+
+        if delta <= 60:  # ←ここが肝
             print(f"[INFO] 投稿を実行します: {text}")
             post_tweet(text)
             break
     else:
         print("No scheduled tweet for now.")
+
 
 
 
