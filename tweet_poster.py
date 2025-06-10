@@ -44,10 +44,8 @@ def main():
             post_tweet(text)
             break
     else:
-        print("No scheduled tweet for now.")
+        print("No scheduled tweet for now.")  # ← これも for と同じインデント
 
-    else:
-        print("No scheduled tweet for now.")
 
 if __name__ == "__main__":
     main()
