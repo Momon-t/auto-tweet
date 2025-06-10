@@ -32,21 +32,28 @@ def post_tweet(text):
     url = "https://api.twitter.com/1.1/statuses/update.json"
     auth = OAuth1(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
     res = requests.post(url, auth=auth, data={"status": text})
-    print(res.status_code, res.text)
+    print(f"[DEBUG] Twitter API レスポンスコード: {res.status_code}")
+    print(f"[DEBUG] Twitter API レスポンス内容: {res.text}")
     return res.status_code == 200
+
 
 def main():
     now = get_now_jst()
     now = now.replace(second=0, microsecond=0)
+    print(f"[DEBUG] 現在のJST時刻: {now}")
+
     schedule = load_schedule("schedule.csv")
     for dt, text in schedule:
+        print(f"[DEBUG] スケジュール上の投稿時刻: {dt}")
         delta = abs((dt - now).total_seconds())
+        print(f"[DEBUG] 差分（秒）: {delta}")
         if delta <= 59:
-            print(f"[INFO] Posting tweet: {text}")
+            print(f"[INFO] 投稿を実行します: {text}")
             post_tweet(text)
             break
     else:
         print("No scheduled tweet for now.")
+
 
 
 
